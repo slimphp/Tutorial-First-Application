@@ -28,8 +28,7 @@ if($data['tickets'] && is_array($data['tickets'])):
         <td><?=$ticket->getComponent() ?></td>
         <td><?=$ticket->getShortDescription() ?> ...</td>
         <td>
-            <a href="/ticket/<?=$ticket->getId()?>">view</a>
-            <a href="/ticket/edit/<?=$ticket->getId()?>">edit</a>
+            <a href="<?=$router->pathFor('ticket-detail', ['id' => $ticket->getId()])?>">view</a>
         </td>
     </tr>
 
