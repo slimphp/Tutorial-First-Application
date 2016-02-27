@@ -37,7 +37,7 @@ Now git won't prompt you to add the files in `vendor/` to the repository - we do
 
 ### Create The Application
 
-There's a really excellent and minimal example of an `index.php` for Slim Framework on the [project homepage](https://www.slimframework.com) so we'll use that as our starting point.  Put the following code into `src/public/index.php`:
+There's a really excellent and minimal example of an `index.php` for Slim Framework on the [project homepage](http://www.slimframework.com) so we'll use that as our starting point.  Put the following code into `src/public/index.php`:
 
 ```php
 <?php
