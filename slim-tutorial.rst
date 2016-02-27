@@ -237,6 +237,7 @@ The use of `$app->get()` here means that this route is only available for GET re
 Slim routes match in the order they are declared, so if you have a route for '/' then that should be the last route you declare in your application.  In this example, all the routes are in index.php but in practice this can make for a rather long and unwieldy file!  It's fine to refactor your application to put routes into a different file or files, or just register a set of routes with callbacks that are actually declared elsewhere.
 
 All route callbacks accept three parameters (the third one is optional):
+
  * Request: this contains all the information about the incoming request, headers, variables, etc.
  * Response: we can add output and headers to this and, once complete, it will be turned into the HTTP response that the client receives
  * Arguments: the named placeholders from the URL (more on those in just a moment), this is optional and is usually omitted if there aren't any
