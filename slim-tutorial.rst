@@ -203,6 +203,7 @@ $container['db'] = function ($c) {
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     return $pdo;
 };
+```
 
 Remember the config that we added into our app earlier?  Well, this is where we use it - the container knows how to access our settings, and so we can grab our configuration very easily from here.  With the config, we create the `PDO` object (remember this will throw a `PDOException` if it fails and you might like to handle that here) so that we can connect to the database.  I've included two `setAttribute()` calls that really aren't necessary but I find these two settings make PDO itself much more usable as a library so I left the settings in this example so you can use them too!  Finally, we return our connection object.
 
