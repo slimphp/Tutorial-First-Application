@@ -366,7 +366,7 @@ Did you notice something fun going on with `$router->pathFor()` right at the end
 
 ### Easy URL Building with Named Routes
 
-When we create a route, we can give it a name by calling `->setName()` on the route object.  In this case, I am adding the name to the route that lets me view an invididual ticket so that I can quickly create the right URL for a ticket by just giving the name of the route, so my code now looks something like this (just the changed bits shown here):
+When we create a route, we can give it a name by calling `->setName()` on the route object.  In this case, I am adding the name to the route that lets me view an individual ticket so that I can quickly create the right URL for a ticket by just giving the name of the route, so my code now looks something like this (just the changed bits shown here):
 
 ```php
 $app->get('/ticket/{id}', function (Request $request, Response $response, $args) {
