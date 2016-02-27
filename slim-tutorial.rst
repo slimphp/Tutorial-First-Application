@@ -305,7 +305,7 @@ The above code is in three sections: first, we grab the data that came in from t
 
 ## Views and Templates
 
-Slim doesn't have an opinion on the views that you should use, although there are some options that are ready to plug in.  Your best choices are either Twig or plain old PHP.  Both options have pros and cons: if you're already familiar with Twig then it offers lots of excellent features and functionality such as layouts - but if you're not already using twig, it can be a large learning curve overhead to add to a microframework project.  If you're looking for something dirt simple then the PHP views might be for you!  I picked PHP for this example project, but if you're familiar with Twig then feel free to use that; the basics are mostly the same.
+Slim doesn't have an opinion on the views that you should use, although there are some options that are ready to plug in.  Your best choices are either Twig or plain old PHP.  Both options have pros and cons: if you're already familiar with Twig then it offers lots of excellent features and functionality such as layouts - but if you're not already using Twig, it can be a large learning curve overhead to add to a microframework project.  If you're looking for something dirt simple then the PHP views might be for you!  I picked PHP for this example project, but if you're familiar with Twig then feel free to use that; the basics are mostly the same.
 
 In order to be able to render the view, we'll first need to create a view and make it available to our application; we do that by adding it to the DIC.  The code we need goes with the other DIC additions near the top of `src/public/index.php` and it looks like this:
 
