@@ -330,7 +330,7 @@ The only new part here is the penultimate line where we set the `$response` vari
 
 When passing the data to templates, you can add as many elements to the array as you want to make available in the template.  The keys of the array are the variables that the data will exist in once we get to the template itself.
 
-As an example, here's a snippet from the template that displays the ticket list (i.e. the code from `src/templates/tickets.php` - which uses http://purecss.io/ to help cover my lack of frontend skills):
+As an example, here's a snippet from the template that displays the ticket list (i.e. the code from `src/templates/tickets.php` - which uses [Pure.css](http://purecss.io/) to help cover my lack of frontend skills):
 
 ```php
 <h1>All Tickets</h1>
