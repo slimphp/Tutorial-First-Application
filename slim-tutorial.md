@@ -273,19 +273,12 @@ It is possible to get all the query parameters from a request by doing `$request
 
 These can then be used (after validating of course) inside your callback.
 
-### Using POST Parameters
 
-For POST parameters, these are part of the body of a request rather than the URL, so they are handled differently.  Also, Slim has some very smart handling which takes into account the Content-Type of the request that arrived, and which can then parse the body accordingly.
+### Working with POST Data
 
-Often we'll be dealing with form variables, in which case the form data can be accessed like this:
+When working with incoming data, we can find this in the body.  We've already seen how we can parse data from the URL and how to obtain the GET variables by doing `$request->getQueryParameters()` but what about POST data?  The POST request data can be found in the body of the request, and Slim has some good built in helpers to make it easier to get the information in a useful format.
 
-```php
-    $data = $request->getParsedBody();
-```
-
-The array `$data` will now contain an associative array of the fields that came into the form - similar to `$_POST` in a plain PHP application.  If the request is either JSON or XML, these various formats are also understood and can be parsed into an associative array accordingly.
-
-Armed with this knowledge, we can now create an endpoint that accepts a POST request (by using `$app->post()` rather than `$app->get()`) and creates a new ticket from the data it receives.  Here's the code from the example application which does this:
+For data that comes from a web form, Slim will turn that into an array.  My tickets example application has a form for creating new tickets that just sends two fields: "title" and "description".  Here is the first part of the route that receives that data, note that for a POST route use `$app->post()` rather than `$app-get()`:
 
 ```php
 $app->post('/ticket/new', function (Request $request, Response $response) {
@@ -378,29 +371,10 @@ $app->get('/ticket/{id}', function (Request $request, Response $response, $args)
 To use this in my template, I need to make the router available in the template that's going to want to create this URL, so I've amended the `tickets/` route to pass a router through to the template by changing the render line to look like this:
 
 ```php
-    $response = $this->view->render($response, "tickets.php", ["tickets" => $tickets, "router" => $this->get('router')]);
+    $response = $this->view->render($response, "tickets.phtml", ["tickets" => $tickets, "router" => $this->router]);
 ```
 
 With the `/tickets/{id}` route having a friendly name, and the router now available in our template, this is is what makes the `pathFor()` call in our template work.  By supplying the `id`, this gets used as a named placeholder in the URL pattern, and the correct URL for linking to that route with those values is created.  This feature is brilliant for readable template URLs and is even better if you ever need to change a URL format for any reason - no need to grep templates to see where it's used.  This approach is definitely recomended, especially for links you'll use a lot.
-
-## Working with POST Data
-
-When working with incoming data, we can find this in the body.  We've already seen how we can parse data from the URL and how to obtain the GET variables by doing `$request->getQueryParameters()` but what about POST data?  The POST request data can be found in the body of the request, and Slim has some good built in helpers to make it easier to get the information in a useful format.
-
-For data that comes from a web form, Slim will turn that into an array.  My tickets example application has a form for creating new tickets that just sends two fields: "title" and "description".  Here is the first part of the route that receives that data:
-
-```php
-$app->post('/ticket/new', function (Request $request, Response $response) {
-    $data = $request->getParsedBody();
-    $ticket_data = [];
-    $ticket_data['title'] = filter_var($data['title'], FILTER_SANITIZE_STRING);
-    $ticket_data['description'] = filter_var($data['description'], FILTER_SANITIZE_STRING);
-    // ...
-```
-
-The call to `$request->getParsedBody()` asks Slim to look at the request and the `Content-Type` headers of that request, then do something smart and useful with the body.  In this example it's just a form post and so the resulting `$data` array looks very similar to what we'd expect from `$_POST`.  The really big advantage of using the built in Slim methods is that we can test things by injecting different request objects - if we were to use `$_POST` directly, we aren't able to do that.
-
-What's really neat here is that if you're building an API or writing AJAX endpoints, for example, it's super easy to work with data formats that arrive by POST but which aren't a web form.  As long as the `Content-Type` header is set correctly, Slim will parse a JSON payload into an array and you can access it exactly the same way: by using `$request->getParsedBody()`.
 
 ## Where Next?
 
