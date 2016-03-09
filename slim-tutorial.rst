@@ -37,7 +37,7 @@ Now git won't prompt you to add the files in `vendor/` to the repository - we do
 
 ### Create The Application
 
-There's a really excellent and minimal example of an `index.php` for Slim Framework on the [project homepage](https://www.slimframework.com) so we'll use that as our starting point.  Put the following code into `src/public/index.php`:
+There's a really excellent and minimal example of an `index.php` for Slim Framework on the [project homepage](http://www.slimframework.com) so we'll use that as our starting point.  Put the following code into `src/public/index.php`:
 
 ```php
 <?php
@@ -203,6 +203,7 @@ $container['db'] = function ($c) {
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     return $pdo;
 };
+```
 
 Remember the config that we added into our app earlier?  Well, this is where we use it - the container knows how to access our settings, and so we can grab our configuration very easily from here.  With the config, we create the `PDO` object (remember this will throw a `PDOException` if it fails and you might like to handle that here) so that we can connect to the database.  I've included two `setAttribute()` calls that really aren't necessary but I find these two settings make PDO itself much more usable as a library so I left the settings in this example so you can use them too!  Finally, we return our connection object.
 
@@ -236,6 +237,7 @@ The use of `$app->get()` here means that this route is only available for GET re
 Slim routes match in the order they are declared, so if you have a route for '/' then that should be the last route you declare in your application.  In this example, all the routes are in index.php but in practice this can make for a rather long and unwieldy file!  It's fine to refactor your application to put routes into a different file or files, or just register a set of routes with callbacks that are actually declared elsewhere.
 
 All route callbacks accept three parameters (the third one is optional):
+
  * Request: this contains all the information about the incoming request, headers, variables, etc.
  * Response: we can add output and headers to this and, once complete, it will be turned into the HTTP response that the client receives
  * Arguments: the named placeholders from the URL (more on those in just a moment), this is optional and is usually omitted if there aren't any
@@ -303,7 +305,7 @@ The above code is in three sections: first, we grab the data that came in from t
 
 ## Views and Templates
 
-Slim doesn't have an opinion on the views that you should use, although there are some options that are ready to plug in.  Your best choices are either Twig or plain old PHP.  Both options have pros and cons: if you're already familiar with Twig then it offers lots of excellent features and functionality such as layouts - but if you're not already using twig, it can be a large learning curve overhead to add to a microframework project.  If you're looking for something dirt simple then the PHP views might be for you!  I picked PHP for this example project, but if you're familiar with Twig then feel free to use that; the basics are mostly the same.
+Slim doesn't have an opinion on the views that you should use, although there are some options that are ready to plug in.  Your best choices are either Twig or plain old PHP.  Both options have pros and cons: if you're already familiar with Twig then it offers lots of excellent features and functionality such as layouts - but if you're not already using Twig, it can be a large learning curve overhead to add to a microframework project.  If you're looking for something dirt simple then the PHP views might be for you!  I picked PHP for this example project, but if you're familiar with Twig then feel free to use that; the basics are mostly the same.
 
 In order to be able to render the view, we'll first need to create a view and make it available to our application; we do that by adding it to the DIC.  The code we need goes with the other DIC additions near the top of `src/public/index.php` and it looks like this:
 
@@ -328,7 +330,7 @@ The only new part here is the penultimate line where we set the `$response` vari
 
 When passing the data to templates, you can add as many elements to the array as you want to make available in the template.  The keys of the array are the variables that the data will exist in once we get to the template itself.
 
-As an example, here's a snippet from the template that displays the ticket list (i.e. the code from `src/templates/tickets.php` - which uses http://purecss.io/ to help cover my lack of frontend skills):
+As an example, here's a snippet from the template that displays the ticket list (i.e. the code from `src/templates/tickets.php` - which uses [Pure.css](http://purecss.io/) to help cover my lack of frontend skills):
 
 ```php
 <h1>All Tickets</h1>
@@ -364,7 +366,7 @@ Did you notice something fun going on with `$router->pathFor()` right at the end
 
 ### Easy URL Building with Named Routes
 
-When we create a route, we can give it a name by calling `->setName()` on the route object.  In this case, I am adding the name to the route that lets me view an invididual ticket so that I can quickly create the right URL for a ticket by just giving the name of the route, so my code now looks something like this (just the changed bits shown here):
+When we create a route, we can give it a name by calling `->setName()` on the route object.  In this case, I am adding the name to the route that lets me view an individual ticket so that I can quickly create the right URL for a ticket by just giving the name of the route, so my code now looks something like this (just the changed bits shown here):
 
 ```php
 $app->get('/ticket/{id}', function (Request $request, Response $response, $args) {
