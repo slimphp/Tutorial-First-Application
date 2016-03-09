@@ -121,7 +121,7 @@ $config['db']['pass']   = "password";
 $config['db']['dbname'] = "exampleapp";
 ```
 
-The first line is the most important!  Turn this on in development mode to get information about errors (otherwise Slim will just show you the generic "oops, something went wrong" page, which is polite but maddening!).  The other settings here are not specific keys/values, they're just some data that I want to be able to access later.
+The first line is the most important!  Turn this on in development mode to get information about errors (without it, Slim will at least log errors so if you're using the built in PHP webserver then you'll see them in the console output which is helpful).  The other settings here are not specific keys/values, they're just some data that I want to be able to access later.
 
 Now to feed this into Slim, we need to *change* where we create the `Slim/App` object so that it now looks like this:
 
@@ -234,7 +234,9 @@ $app->get('/tickets', function (Request $request, Response $response) {
 
 The use of `$app->get()` here means that this route is only available for GET requests; there's an equivalent `$app->post()` call that also takes the route pattern and a callback for POST requests.  There are also [methods for other verbs](http://www.slimframework.com/docs/objects/router.html) - and also the `map()` function for situations where more than one verb should use the same code for a particular route.
 
-Slim routes match in the order they are declared, so if you have a route for '/' then that should be the last route you declare in your application.  In this example, all the routes are in index.php but in practice this can make for a rather long and unwieldy file!  It's fine to refactor your application to put routes into a different file or files, or just register a set of routes with callbacks that are actually declared elsewhere.
+Slim routes match in the order they are declared, so if you have a route which could overlap another route, you need to put the most specific one first.  Slim will throw an exception if there's a problem, for example in this application I have both `/ticket/new` and `/ticket/{id}` and they need to be declared in that order otherwise the routing will think that "new" is an ID!
+
+In this example application, all the routes are in `index.php` but in practice this can make for a rather long and unwieldy file!  It's fine to refactor your application to put routes into a different file or files, or just register a set of routes with callbacks that are actually declared elsewhere.
 
 All route callbacks accept three parameters (the third one is optional):
 
@@ -291,21 +293,20 @@ $app->post('/ticket/new', function (Request $request, Response $response) {
     $ticket_data = [];
     $ticket_data['title'] = filter_var($data['title'], FILTER_SANITIZE_STRING);
     $ticket_data['description'] = filter_var($data['description'], FILTER_SANITIZE_STRING);
-
-    $ticket = new TicketEntity($ticket_data);
-    $ticket_mapper = new TicketMapper($this->db);
-    $ticket_mapper->save($ticket);
-
-    $response = $response->withRedirect("/tickets");
-    return $response;
-});
+    // ...
 ```
 
-The above code is in three sections: first, we grab the data that came in from the form and, using the [filter](http://php.net/manual/en/book.filter.php) extension, make sure it is acceptable before we go on to use it.  The middle section creates a new TicketEntity that we can then save in the database, and finally we simply instruct the response to be a redirect to `/tickets` so that the new ticket can be seen in the list.
+The call to `$request->getParsedBody()` asks Slim to look at the request and the `Content-Type` headers of that request, then do something smart and useful with the body.  In this example it's just a form post and so the resulting `$data` array looks very similar to what we'd expect from `$_POST` - and we can go ahead and use the [filter](http://php.net/manual/en/book.filter.php) extension to check the value is aceptable before we use it.  A huge advantage of using the built in Slim methods is that we can test things by injecting different request objects - if we were to use `$_POST` directly, we aren't able to do that.
+
+What's really neat here is that if you're building an API or writing AJAX endpoints, for example, it's super easy to work with data formats that arrive by POST but which aren't a web form.  As long as the `Content-Type` header is set correctly, Slim will parse a JSON payload into an array and you can access it exactly the same way: by using `$request->getParsedBody()`.
 
 ## Views and Templates
 
 Slim doesn't have an opinion on the views that you should use, although there are some options that are ready to plug in.  Your best choices are either Twig or plain old PHP.  Both options have pros and cons: if you're already familiar with Twig then it offers lots of excellent features and functionality such as layouts - but if you're not already using Twig, it can be a large learning curve overhead to add to a microframework project.  If you're looking for something dirt simple then the PHP views might be for you!  I picked PHP for this example project, but if you're familiar with Twig then feel free to use that; the basics are mostly the same.
+
+Since we'll be using the PHP views, we'll need to add this dependency to our project via Composer.  The command looks like this (similar to the ones you've already seen):
+
+    php composer.phar require slim/php-view
 
 In order to be able to render the view, we'll first need to create a view and make it available to our application; we do that by adding it to the DIC.  The code we need goes with the other DIC additions near the top of `src/public/index.php` and it looks like this:
 
@@ -321,7 +322,7 @@ $app->get('/tickets', function (Request $request, Response $response) {
     $mapper = new TicketMapper($this->db);
     $tickets = $mapper->getTickets();
 
-    $response = $this->view->render($response, "tickets.php", ["tickets" => $tickets]);
+    $response = $this->view->render($response, "tickets.phtml", ["tickets" => $tickets]);
     return $response;
 });
 ```
@@ -330,7 +331,7 @@ The only new part here is the penultimate line where we set the `$response` vari
 
 When passing the data to templates, you can add as many elements to the array as you want to make available in the template.  The keys of the array are the variables that the data will exist in once we get to the template itself.
 
-As an example, here's a snippet from the template that displays the ticket list (i.e. the code from `src/templates/tickets.php` - which uses [Pure.css](http://purecss.io/) to help cover my lack of frontend skills):
+As an example, here's a snippet from the template that displays the ticket list (i.e. the code from `src/templates/tickets.phtml` - which uses [Pure.css](http://purecss.io/) to help cover my lack of frontend skills):
 
 ```php
 <h1>All Tickets</h1>
