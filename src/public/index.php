@@ -40,14 +40,14 @@ $app->get('/tickets', function (Request $request, Response $response) {
     $mapper = new TicketMapper($this->db);
     $tickets = $mapper->getTickets();
 
-    $response = $this->view->render($response, "tickets.phtml", ["tickets" => $tickets, "router" => $this->'router']);
+    $response = $this->view->render($response, "tickets.php", ["tickets" => $tickets, "router" => $this->router]);
     return $response;
 });
 
 $app->get('/ticket/new', function (Request $request, Response $response) {
     $component_mapper = new ComponentMapper($this->db);
     $components = $component_mapper->getComponents();
-    $response = $this->view->render($response, "ticketadd.phtml", ["components" => $components]);
+    $response = $this->view->render($response, "ticketadd.php", ["components" => $components]);
     return $response;
 });
 
@@ -76,7 +76,7 @@ $app->get('/ticket/{id}', function (Request $request, Response $response, $args)
     $mapper = new TicketMapper($this->db);
     $ticket = $mapper->getTicketById($ticket_id);
 
-    $response = $this->view->render($response, "ticketdetail.phtml", ["ticket" => $ticket]);
+    $response = $this->view->render($response, "ticketdetail.php", ["ticket" => $ticket]);
     return $response;
 })->setName('ticket-detail');
 
