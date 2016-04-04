@@ -40,7 +40,7 @@ $app->get('/tickets', function (Request $request, Response $response) {
     $mapper = new TicketMapper($this->db);
     $tickets = $mapper->getTickets();
 
-    $response = $this->view->render($response, "tickets.phtml", ["tickets" => $tickets, "router" => $this->'router']);
+    $response = $this->view->render($response, "tickets.phtml", ["tickets" => $tickets, "router" => $this->router]);
     return $response;
 });
 
