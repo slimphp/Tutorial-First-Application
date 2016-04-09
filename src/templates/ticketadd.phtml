@@ -17,13 +17,10 @@
     <select name="component">
         <option value=""></option>
 <?php
-if($data['components'] && is_array($data['components'])): 
-    foreach($data['components'] as $component): ?>
-
-        <option value=<?=$component->getId()?>><?=$component->getName()?></option>
+foreach($components as $component): ?>
+    <option value="<?=$component->getId()?>"><?=$component->getName()?></option>
 <?php
-    endforeach;
-endif;
+endforeach;
 ?>
     </select><br />
 
