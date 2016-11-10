@@ -9,7 +9,7 @@
 <p><a href="/ticket/new">Add new ticket</a></p>
 
 <?php
-if($data['tickets'] && is_array($data['tickets'])):
+if(count($tickets) > 0):
 ?>
 <table class="pure-table">
     <tr>
@@ -20,8 +20,8 @@ if($data['tickets'] && is_array($data['tickets'])):
     </tr>
 
 <?php
-    $odd = 1;
-    foreach($data['tickets'] as $ticket): ?>
+    $odd = true;
+    foreach($tickets as $ticket): ?>
 
         <tr <?=$odd ? "class=\"pure-table-odd\"" : ""; ?>>
         <td><?=$ticket->getTitle() ?></td>
@@ -33,12 +33,11 @@ if($data['tickets'] && is_array($data['tickets'])):
     </tr>
 
 <?php 
-    $odd = $odd ? 0 : 1;
+    $odd = $odd ? false : true;
     endforeach; ?>
 </table>
 <?php else: ?>
 <p>No current tickets</p>
-
 <?php endif; ?>
 
 </body>
