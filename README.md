@@ -14,4 +14,4 @@ It is a very simple Slim project to serve as an example application of using Sli
 Patches to both tutorial and code are welcome.
 
 
-[1]: http://www.slimframework.com/docs/tutorial/first-app.html
+[1]: https://www.slimframework.com/docs/v3/tutorial/first-app.html
